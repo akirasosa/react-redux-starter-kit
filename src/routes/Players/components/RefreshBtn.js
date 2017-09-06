@@ -1,7 +1,10 @@
 import React, { PropTypes } from 'react'
 
 const RefreshBtn = ({ loading, fetchPlayers }) => (
-  <button disabled={loading} onClick={fetchPlayers}>Refresh</button>
+  <button type='button'
+    className='btn btn-primary'
+    disabled={loading}
+    onClick={fetchPlayers}>Refresh</button>
 )
 
 RefreshBtn.propTypes = {

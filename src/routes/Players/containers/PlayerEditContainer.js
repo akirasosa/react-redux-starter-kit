@@ -16,7 +16,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   player: state.playersApp.playerEditing,
 })
 

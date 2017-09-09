@@ -1,6 +1,7 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import PlayerEditContainer from '../containers/PlayerEditContainer'
 import PlayerShowContainer from '../containers/PlayerShowContainer'
+import PropTypes from 'prop-types'
 
 function Player (props) {
   if (props.isEditing) {

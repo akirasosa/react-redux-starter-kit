@@ -131,7 +131,7 @@ const ACTION_HANDLERS = {
 
 const initialState = {
   players: [],
-  loading: true,
+  loading: false,
   playerEditing: null,
 }
 

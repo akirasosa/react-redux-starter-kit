@@ -1,4 +1,3 @@
-const PLAYERS_INIT = 'PLAYERS_INIT'
 const PLAYERS_EDIT = 'PLAYERS_EDIT'
 const PLAYERS_CANCEL_EDIT = 'PLAYERS_CANCEL_EDIT'
 const PLAYERS_SAVE = 'PLAYERS_SAVE'
@@ -9,13 +8,6 @@ const PLAYERS_FETCH_SUCCESS = 'PLAYERS_FETCH_SUCCESS'
 // ------------------------------------
 // Actions
 // ------------------------------------
-
-export function initPlayers (players) {
-  return {
-    type: PLAYERS_INIT,
-    payload: players
-  }
-}
 
 export function editPlayer (id) {
   return {
@@ -46,25 +38,22 @@ export function changeScore (idx, score) {
 
 export const fetchPlayers = () => {
   return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      dispatch({
-        type: PLAYERS_FETCH_REQUEST,
-      })
-      setTimeout(() => {
-        // TODO get newPlayers from API
-        const newPlayers = getState().playersApp.players.map(p => {
-          return {
-            ...p,
-            scores: randomScores()
-          }
-        })
+    dispatch({
+      type: PLAYERS_FETCH_REQUEST,
+    })
+    return fetch('https://lyywnpoayb.execute-api.ap-northeast-1.amazonaws.com/staging/players')
+      .then(res => res.json())
+      .then(players => {
+        const newPlayers = players.map(p => ({
+          ...p,
+          isEditing: false,
+          scores: p.scores_day1 // FIXME
+        }))
         dispatch({
           type: PLAYERS_FETCH_SUCCESS,
           payload: newPlayers,
         })
-        resolve()
-      }, 1000)
-    })
+      })
   }
 }
 
@@ -73,19 +62,6 @@ export const fetchPlayers = () => {
 // ------------------------------------
 
 const ACTION_HANDLERS = {
-  [PLAYERS_INIT]: (state, action) => {
-    const players = action.payload
-
-    return {
-      ...state,
-      loading: false,
-      players: players.map(p => ({
-        ...p,
-        isEditing: false,
-        scores: p.scores_day1 // FIXME
-      })),
-    }
-  },
   [PLAYERS_EDIT]: (state, action) => {
     const playerToEdit = state.players.find(p => p.id === action.payload)
 
@@ -147,14 +123,6 @@ const ACTION_HANDLERS = {
       loading: false,
     }
   },
-}
-
-// ------------------------------------
-// Utility
-// ------------------------------------
-
-function randomScores () {
-  return Array(18).fill().map(_ => Math.floor(Math.random() * (8 - 3) + 3))
 }
 
 // ------------------------------------

@@ -1,3 +1,4 @@
+const PLAYERS_INIT = 'PLAYERS_INIT'
 const PLAYERS_EDIT = 'PLAYERS_EDIT'
 const PLAYERS_CANCEL_EDIT = 'PLAYERS_CANCEL_EDIT'
 const PLAYERS_SAVE = 'PLAYERS_SAVE'
@@ -8,6 +9,13 @@ const PLAYERS_FETCH_SUCCESS = 'PLAYERS_FETCH_SUCCESS'
 // ------------------------------------
 // Actions
 // ------------------------------------
+
+export function initPlayers (players) {
+  return {
+    type: PLAYERS_INIT,
+    payload: players
+  }
+}
 
 export function editPlayer (id) {
   return {
@@ -65,6 +73,19 @@ export const fetchPlayers = () => {
 // ------------------------------------
 
 const ACTION_HANDLERS = {
+  [PLAYERS_INIT]: (state, action) => {
+    const players = action.payload
+
+    return {
+      ...initialState,
+      loading: false,
+      players: players.map(p => ({
+        ...p,
+        isEditing: false,
+        scores: p.scores_day1 // FIXME
+      })),
+    }
+  },
   [PLAYERS_EDIT]: (state, action) => {
     const playerToEdit = state.players.find(p => p.id === action.payload)
 
@@ -141,21 +162,8 @@ function randomScores () {
 // ------------------------------------
 
 const initialState = {
-  players: [
-    {
-      id: '1',
-      name: 'Test1',
-      scores: randomScores(),
-      isEditing: false,
-    },
-    {
-      id: '2',
-      name: 'Test2',
-      scores: randomScores(),
-      isEditing: false,
-    },
-  ],
-  loading: false,
+  players: [],
+  loading: true,
   playerEditing: null,
 }
 

@@ -77,7 +77,7 @@ const ACTION_HANDLERS = {
     const players = action.payload
 
     return {
-      ...initialState,
+      ...state,
       loading: false,
       players: players.map(p => ({
         ...p,
